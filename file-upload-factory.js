@@ -1,5 +1,6 @@
 	angular.module('file-uploader', []).factory('FileUploadFactory', ['$q', '$http', function($q, $http) {
 		function dataUriToBlob(dataURI) {
+			var url = "http://localhost:3005/signedUrl";
 			// convert base64/URLEncoded data component to raw binary data held in a string
 			var byteString;
 			if (dataURI.split(',')[0].indexOf('base64') >= 0)
@@ -28,17 +29,7 @@
 				if(typeof options=='object' && options.appendName!=null){
 					appendName = options.appendName;
 				}
-				if(typeof options=='object' && options.custom==true){
-					var date = new Date();
-					var validImageExtensions = [".jpg",".png",".jpeg"];
-					for(var i=0;i<validImageExtensions.length;i++){
-						if(fileName.indexOf(validImageExtensions[i])!==-1){
-							fileName = date.getTime()+(Math.floor(Math.random()*90000) + 10000)+validImageExtensions[i];
-							break;
-						}
-					}
-				}
-				$http.get(appConfig.documentsSign, {
+				$http.get(url, {
 					params: {
 						name: fileName,
 						type: fileType,
@@ -68,42 +59,13 @@
 								deferred.resolve({url: fileUrl, dataUrl: dataURI});
 							},
 							error: function(jqXHR, textStatus, errorThrown) {
-								if (++counter <= appConfig.MAX_RETRIES) {
-									upload();
-								} else {
-									clearInterval(intervalId);
-									deferred.reject(errorThrown);
-								}
-							},
-							xhr: function() {
-								var myXhr = $.ajaxSettings.xhr();
-								if (myXhr.upload) {
-									myXhr.upload.addEventListener('progress', function (e) {
-										if (e.lengthComputable) {
-											var percentLoaded = Math.round((e.loaded / e.total) * 100);
-											if($(".progressBar").length){
-												$(".progressBar").css({width:percentLoaded/100*300});
-												$("#percentageCompleteText").text(percentLoaded+'% Complete');
-											}
-											deferred.notify(percentLoaded);
-										}
-
-									}, false);
-								}
-								return myXhr;
+								deferred.reject(errorThrown);
 							}
 						})
-						var intervalId = setInterval(function () {
-							if(!navigator.onLine){
-								clearInterval(intervalId);
-								uploadXhr.abort();
-							}
-						}, 5000)
 					}
 					upload();
 				})
 				.catch(function (error) {
-					// MessageFactory.error('There was a problem in uploading your attachment ' + file.name + '.', 'Upload Failed');
 					return deferred.reject(error)
 				})
 				return deferred.promise;
