@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   appRoot.factory('FileUploadFactory', ['$q', '$http', function($q, $http) {
-    var url = "https://54.169.218.46:3005/signedUrl";
+    var url = "http://54.169.218.46:3005/signedUrl";
     function dataUriToBlob(dataURI) {
 			// convert base64/URLEncoded data component to raw binary data held in a string
 			var byteString;
