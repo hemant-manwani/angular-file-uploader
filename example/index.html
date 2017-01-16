@@ -1,0 +1,16 @@
+<html  ng-app="app">
+  <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title> File Uploader</title>
+
+  </head>
+  <body ng-controller="fileUploadController">
+    <fileuploader success="fileUploaded" error="fileNotUploaded"></fileuploader>
+
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+    <script src="../src/angular-file-uploader.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
